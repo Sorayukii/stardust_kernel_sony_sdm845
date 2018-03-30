@@ -1175,6 +1175,8 @@ static int bpf_prog_attach(const union bpf_attr *attr)
 		break;
 	case BPF_CGROUP_INET4_BIND:
 	case BPF_CGROUP_INET6_BIND:
+	case BPF_CGROUP_INET4_CONNECT:
+	case BPF_CGROUP_INET6_CONNECT:
                 prog = bpf_prog_get_type(attr->attach_bpf_fd,
                                          BPF_PROG_TYPE_CGROUP_SOCK_ADDR);
                 if (IS_ERR(prog))
@@ -1221,6 +1223,12 @@ static int bpf_prog_detach(const union bpf_attr *attr)
 		break;
 	case BPF_CGROUP_INET_SOCK_CREATE:
 		ptype = BPF_PROG_TYPE_CGROUP_SOCK;
+		break;
+	case BPF_CGROUP_INET4_BIND:
+	case BPF_CGROUP_INET6_BIND:
+	case BPF_CGROUP_INET4_CONNECT:
+	case BPF_CGROUP_INET6_CONNECT:
+		ptype = BPF_PROG_TYPE_CGROUP_SOCK_ADDR;
 		break;
 	default:
 		return -EINVAL;
