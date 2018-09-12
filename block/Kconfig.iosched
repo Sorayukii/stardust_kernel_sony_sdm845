@@ -66,6 +66,19 @@ config IOSCHED_MAPLE
 	  in performance. Maple also uses hooks for the powersuspend driver to increase
 	  expirations when power is suspended to decrease workload.
 
+config IOSCHED_ANXIETY
+	tristate "Anxiety I/O Scheduler"
+	default y
+	---help---
+	  Anxiety is a low-latency I/O scheduler designed for use in
+	  embedded devices with flash storage. It attempts to provide
+	  unfair request bias, batching synchronous requests together
+	  at the expense of delaying asyncrhonous requests. By
+	  definition, synchronous requests are essentially "holding up"
+	  the current processes until they are dispatched. By biasing
+	  and batching synchronous requests, process initialization is
+	  expedited.
+
 choice
 	prompt "Default I/O scheduler"
 	default DEFAULT_CFQ
@@ -91,6 +104,9 @@ choice
 	config DEFAULT_MAPLE
 		bool "Maple" if IOSCHED_MAPLE=y
 
+	config DEFAULT_ANXIETY
+		bool "Anxiety" if IOSCHED_ANXIETY=y
+
 endchoice
 
 config DEFAULT_IOSCHED
@@ -101,6 +117,7 @@ config DEFAULT_IOSCHED
 	default "sio" if DEFAULT_SIO
 	default "zen" if DEFAULT_ZEN
 	default "maple" if DEFAULT_MAPLE
+	default "anxiety" if DEFAULT_ANXIETY
 
 endmenu
 
