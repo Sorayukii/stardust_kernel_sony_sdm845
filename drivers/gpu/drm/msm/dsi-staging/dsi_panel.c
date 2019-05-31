@@ -28,7 +28,7 @@
 #endif /* CONFIG_DRM_SDE_SPECIFIC_PANEL */
 
 #ifdef CONFIG_KLAPSE
-#include "../sde/klapse.h"
+#include <linux/klapse.h>
 #endif
 
 /**
