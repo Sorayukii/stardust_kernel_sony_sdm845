@@ -158,10 +158,4 @@ config DRM_SDE_SPECIFIC_PANEL
 	The MDSS Specific Panel provides support for specific panel driver
 	file.
 
-config KLAPSE
-    bool CONFIG_KLAPSE
-    depends on DRM_MSM
-    default n
-    help
-        A simple rgb dynamic lapsing module similar to LineageOS' livedisplay
 

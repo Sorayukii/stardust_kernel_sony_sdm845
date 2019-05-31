@@ -47,6 +47,12 @@ if FB || SGI_NEWPORT_CONSOLE
 
 endif
 
+config KLAPSE
+    bool CONFIG_KLAPSE
+    default n
+    help
+        A simple rgb dynamic lapsing module similar to LineageOS' livedisplay
+
 source "drivers/gpu/trace/Kconfig"
 
 endmenu
