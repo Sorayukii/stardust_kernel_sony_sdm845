@@ -1301,4 +1301,4 @@ static int __init sugov_register(void)
 {
 	return cpufreq_register_governor(&schedhorizon_gov);
 }
-fs_initcall(sugov_register);
+core_initcall(sugov_register);
