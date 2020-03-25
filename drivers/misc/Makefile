@@ -69,6 +69,8 @@ obj-$(CONFIG_VXR200_XR_MISC) += vxr7200.o
 
 obj-$(CONFIG_LDO_VIBRATOR)	+= ldo_vibrator.o
 
+obj-$(CONFIG_SIM_DETECT)	+= sim_detect.o
+
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_heap.o
