@@ -3330,6 +3330,7 @@ static int msm_anlg_cdc_codec_enable_ear_pa(struct snd_soc_dapm_widget *w,
 				       DIG_CDC_EVENT_RX1_MUTE_OFF);
 		break;
 	case SND_SOC_DAPM_PRE_PMD:
+		usleep_range(4000, 4100);
 		msm_anlg_cdc_dig_notifier_call(codec,
 				       DIG_CDC_EVENT_RX1_MUTE_ON);
 		/* Wait for 20ms for RX digital mute to take effect */
