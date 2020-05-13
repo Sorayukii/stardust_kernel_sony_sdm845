@@ -193,6 +193,13 @@ extern struct task_group root_task_group;
 # define INIT_TASK_TI(tsk)
 #endif
 
+#ifdef CONFIG_SECCOMP
+# define INIT_SECCOMP_FILTER_COUNT(tsk)				\
+	.seccomp	= { .filter_count = ATOMIC_INIT(0) },
+#else
+# define INIT_SECCOMP_FILTER_COUNT(tsk)
+#endif
+
 /*
  *  INIT_TASK is used to set up the first task table, touch at
  * your own risk!. Base=0, limit=0x1fffff (=2MB)
@@ -272,6 +279,7 @@ extern struct task_group root_task_group;
 	INIT_VTIME(tsk)							\
 	INIT_NUMA_BALANCING(tsk)					\
 	INIT_KASAN(tsk)							\
+	INIT_SECCOMP_FILTER_COUNT(tsk)				\
 }
 
 

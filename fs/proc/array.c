@@ -346,6 +346,8 @@ static inline void task_seccomp(struct seq_file *m, struct task_struct *p)
 {
 #ifdef CONFIG_SECCOMP
 	seq_put_decimal_ull(m, "Seccomp:\t", p->seccomp.mode);
+	seq_put_decimal_ull(m, "\nSeccomp_filters:\t",
+			    atomic_read(&p->seccomp.filter_count));
 	seq_putc(m, '\n');
 #endif
 	seq_printf(m, "Speculation_Store_Bypass:\t");
