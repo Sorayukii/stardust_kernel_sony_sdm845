@@ -699,9 +699,11 @@ void wcd_mbhc_report_plug(struct wcd_mbhc *mbhc, int insertion,
 					&mbhc->zl, &mbhc->zr);
 			WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_FSM_EN,
 						 fsm_en);
-			if (mbhc->zl > mbhc->mbhc_cfg->linein_th &&
-				mbhc->zr > mbhc->mbhc_cfg->linein_th &&
-				jack_type == SND_JACK_HEADPHONE) {
+			if ((mbhc->zl > mbhc->mbhc_cfg->linein_th &&
+				mbhc->zl < MAX_IMPED) &&
+				(mbhc->zr > mbhc->mbhc_cfg->linein_th &&
+				 mbhc->zr < MAX_IMPED) &&
+				(jack_type == SND_JACK_HEADPHONE)) {
 				jack_type = SND_JACK_LINEOUT;
 				mbhc->force_linein = true;
 				mbhc->current_plug = MBHC_PLUG_TYPE_HIGH_HPH;
@@ -1854,6 +1856,8 @@ int wcd_mbhc_init(struct wcd_mbhc *mbhc, struct snd_soc_codec *codec,
 	const char *gnd_switch = "qcom,msm-mbhc-gnd-swh";
 	const char *hs_thre = "qcom,msm-mbhc-hs-mic-max-threshold-mv";
 	const char *hph_thre = "qcom,msm-mbhc-hs-mic-min-threshold-mv";
+
+ 	impedance_det_en = true;
 
 	pr_debug("%s: enter\n", __func__);
 
