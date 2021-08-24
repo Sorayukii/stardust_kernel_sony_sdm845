@@ -20,6 +20,8 @@
 
 DEFINE_SPINLOCK(cpuidle_driver_lock);
 
+#define POLL_IDLE_TIME_LIMIT	(TICK_NSEC / 16)
+
 #ifdef CONFIG_CPU_IDLE_MULTIPLE_DRIVERS
 
 static DEFINE_PER_CPU(struct cpuidle_driver *, cpuidle_drivers);
@@ -181,10 +183,16 @@ static void __cpuidle_driver_init(struct cpuidle_driver *drv)
 static int __cpuidle poll_idle(struct cpuidle_device *dev,
 			       struct cpuidle_driver *drv, int index)
 {
+	u64 time_start = local_clock();
+
 	local_irq_enable();
 	if (!current_set_polling_and_test()) {
-		while (!need_resched())
+		while (!need_resched()) {
 			cpu_relax();
+
+			if (local_clock() - time_start > POLL_IDLE_TIME_LIMIT)
+				break;
+		}
 	}
 	current_clr_polling();
 
