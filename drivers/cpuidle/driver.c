@@ -195,8 +195,10 @@ static int __cpuidle poll_idle(struct cpuidle_device *dev,
 				continue;
 
 			loop_count = 0;
-			if (local_clock() - time_start > POLL_IDLE_TIME_LIMIT)
+			if (local_clock() - time_start > POLL_IDLE_TIME_LIMIT) {
+				dev->poll_time_limit = true;
 				break;
+			}
 		}
 	}
 	current_clr_polling();
