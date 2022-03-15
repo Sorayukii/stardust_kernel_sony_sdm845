@@ -120,7 +120,6 @@ struct lpm_cluster {
 	unsigned int psci_mode_shift;
 	unsigned int psci_mode_mask;
 	struct cluster_history history;
-	struct hrtimer histtimer;
 };
 
 struct lpm_cluster *lpm_of_parse_cluster(struct platform_device *pdev);
