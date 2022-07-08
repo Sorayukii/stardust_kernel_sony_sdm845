@@ -248,6 +248,7 @@
 	qcom,qup_uart@0x898000 {
 		clock-frequency = <4000000>;
 		status = "okay";
+		qcom,auto-suspend-disable = <1>;
 	};
 
 	/* SPI: QUP8 */
