@@ -480,7 +480,7 @@
 	};
 
 	chosen {
-		bootargs = "quiet rcupdate.rcu_normal_after_boot=1 cgroup.memory=nokmem,nosocket noirqdebug norandmaps nosoftlockup mce=ignore_ce rcu_nocbs=0-7 cpuidle_sysfs_switch";
+		bootargs = "quiet rcupdate.rcu_normal_after_boot=1 cgroup.memory=nokmem,nosocket cgroup_disable=pressure noirqdebug norandmaps nosoftlockup mce=ignore_ce rcu_nocbs=0-7 cpuidle_sysfs_switch";
 	};
 
 	soc: soc { };
