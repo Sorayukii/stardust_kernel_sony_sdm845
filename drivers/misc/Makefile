@@ -69,6 +69,8 @@ obj-$(CONFIG_VXR200_XR_MISC) += vxr7200.o
 
 obj-$(CONFIG_NFC_PN553_DEVICES) += pn553.o
 
+obj-$(CONFIG_NFC_CARILLON)	+= carillon/
+
 obj-$(CONFIG_LDO_VIBRATOR)	+= ldo_vibrator.o
 
 obj-$(CONFIG_SIM_DETECT)	+= sim_detect.o
