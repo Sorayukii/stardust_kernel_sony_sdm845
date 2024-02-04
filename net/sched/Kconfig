@@ -367,7 +367,7 @@ if NET_SCH_DEFAULT
 
 choice
 	prompt "Default queuing discipline"
-	default DEFAULT_PFIFO_FAST
+	default DEFAULT_FQ_CODEL
 	help
 	  Select the queueing discipline that will be used by default
 	  for all network devices.
@@ -394,7 +394,7 @@ config DEFAULT_NET_SCH
 	default "fq" if DEFAULT_FQ
 	default "fq_codel" if DEFAULT_FQ_CODEL
 	default "sfq" if DEFAULT_SFQ
-	default "pfifo_fast"
+	default "fq_codel"
 endif
 
 comment "Classification"
