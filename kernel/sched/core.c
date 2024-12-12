@@ -2327,8 +2327,8 @@ void __dl_clear_params(struct task_struct *p)
 }
 
 #ifdef CONFIG_SCHED_BORE
-extern u8   sched_burst_fork_atavistic;
-extern uint sched_burst_cache_lifetime;
+extern int sched_burst_fork_atavistic;
+extern int sched_burst_cache_lifetime;
 
 static void __init sched_init_bore(void) {
 	init_task.se.burst_time = 0;
