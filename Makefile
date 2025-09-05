@@ -757,6 +757,25 @@ KBUILD_CFLAGS   += -O3
 endif
 endif
 
+# Optimize for SDM845
+ifdef CONFIG_ARCH_SDM845
+  ifeq ($(cc-name),clang)
+    KBUILD_CFLAGS += -mcpu=cortex-a55 \
+                     -mtune=cortex-a55 \
+                     -march=armv8.2-a+crc+crypto+fp16+dotprod+rcpc
+    KBUILD_AFLAGS += -mcpu=cortex-a55 \
+                     -mtune=cortex-a55 \
+                     -march=armv8.2-a+crc+crypto+fp16+dotprod+rcpc
+  else ifeq ($(cc-name),gcc)
+    KBUILD_CFLAGS += -mcpu=cortex-a75.cortex-a55 \
+                     -mtune=cortex-a75.cortex-a55 \
+                     -march=armv8.2-a+crc+crypto+fp16+dotprod+rcpc
+    KBUILD_AFLAGS += -mcpu=cortex-a75.cortex-a55 \
+                     -mtune=cortex-a75.cortex-a55 \
+                     -march=armv8.2-a+crc+crypto+fp16+dotprod+rcpc
+  endif
+endif
+
 ifdef CONFIG_CC_WERROR
 KBUILD_CFLAGS	+= -Werror
 endif
