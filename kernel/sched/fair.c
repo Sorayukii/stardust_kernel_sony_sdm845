@@ -774,6 +774,7 @@ static u64 sched_vslice(struct cfs_rq *cfs_rq, struct sched_entity *se)
 
 #ifdef CONFIG_SCHED_BORE
 uint __read_mostly sched_bore                   = 1;
+uint __read_mostly sched_burst_exclude_kthreads = 1;
 uint __read_mostly sched_burst_smoothness_long  = 1;
 uint __read_mostly sched_burst_smoothness_short = 0;
 uint __read_mostly sched_burst_fork_atavistic   = 2;
@@ -822,13 +823,16 @@ static void reweight_task_by_prio(struct task_struct *p, int prio)
 static void update_burst_score(struct sched_entity *se) {
 	struct task_struct *p;
 	u8 prio, prev_prio, new_prio;
+	u8 burst_score = 0;
 
 	if (!entity_is_task(se)) return;
 	p = task_of(se);
 	prio = p->static_prio - MAX_RT_PRIO;
 	prev_prio = min(39, prio + se->burst_score);
 
-	se->burst_score = se->burst_penalty >> 2;
+	if (!((p->flags & PF_KTHREAD) && likely(sched_burst_exclude_kthreads)))
+		burst_score = se->burst_penalty >> 2;
+	se->burst_score = burst_score;
 
 	new_prio = min(39, prio + se->burst_score);
 	if (new_prio != prev_prio)
