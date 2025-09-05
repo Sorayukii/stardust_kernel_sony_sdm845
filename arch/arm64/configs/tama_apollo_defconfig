@@ -3303,6 +3303,7 @@ CONFIG_DRM_LT_LT9611=y
 # CONFIG_DRM_ARCPGU is not set
 # CONFIG_DRM_HISI_KIRIN is not set
 # CONFIG_DRM_LEGACY is not set
+CONFIG_KLAPSE=y
 
 #
 # Frame buffer Devices
