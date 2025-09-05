@@ -734,8 +734,6 @@ int dsi_panel_driver_post_power_off(struct dsi_panel *panel)
 
 	if (rc)
 		pr_err("%s: failed to power off\n", __func__);
-	else
-		pr_notice("@@@@ panel power off @@@@\n");
 
 	rc = dsi_panel_set_pinctrl_state(panel, false);
 	if (rc)
@@ -868,8 +866,6 @@ int dsi_panel_driver_power_on(struct dsi_panel *panel)
 			goto exit;
 		}
 	}
-
-	pr_notice("@@@@ panel power on @@@@\n");
 
 	if(spec_pdata->rst_after_pon) {
 		rc = dsi_panel_driver_touch_reset(panel);
@@ -3298,7 +3294,7 @@ int dsi_panel_driver_pcc_setup(void)
 	spec_pdata = panel->spec_pdata;
 
 	if (display->panel->spec_pdata->dsi_pcc_applied) {
-		pr_notice("%s (%d): PCC already applied\n", __func__, __LINE__);
+	//	pr_notice("%s (%d): PCC already applied\n", __func__, __LINE__);
 		goto exit;
 	}
 

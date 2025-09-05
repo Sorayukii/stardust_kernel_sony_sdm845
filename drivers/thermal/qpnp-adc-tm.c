@@ -1709,7 +1709,7 @@ static int qpnp_adc_tm_set_trip_temp(void *data, int low_temp, int high_temp)
 		tm_config.low_thr_temp = low_temp;
 
 	if ((high_temp == INT_MAX) && (low_temp == INT_MIN)) {
-		pr_err("No trips to set\n");
+		pr_debug("No trips to set\n");
 		return -EINVAL;
 	}
 

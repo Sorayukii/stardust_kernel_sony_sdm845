@@ -342,7 +342,7 @@ static ssize_t wakeup_enable_set(struct device *dev,
 
 	if (fpc1145->pm_wakeup) {
 		if (!strncmp(buf, "enable", strlen("enable"))) {
-			dev_info(fpc1145->dev, "%s enable\n", __func__);
+			dev_dbg(fpc1145->dev, "%s enable\n", __func__);
 			atomic_set(&fpc1145->wakeup_enabled, 1);
 			pm_relax(fpc1145->dev);
 		} else if (!strncmp(buf, "disable", strlen("disable"))) {
@@ -472,7 +472,7 @@ static irqreturn_t fpc1145_irq_handler(int irq, void *handle)
 
 	if (atomic_read(&fpc1145->wakeup_enabled)) {
 		pm_stay_awake(fpc1145->dev);
-		dev_info(fpc1145->dev, "%s: wakeup mode\n", __func__);
+		dev_dbg(fpc1145->dev, "%s: wakeup mode\n", __func__);
 	}
 
 	sysfs_notify(&fpc1145->dev->kobj, NULL, dev_attr_irq.attr.name);

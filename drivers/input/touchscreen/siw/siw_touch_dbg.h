@@ -84,16 +84,11 @@ extern u32 t_dev_dbg_mask;
 #define __t_dev_warn(_dev, fmt, args...)	dev_warn(_dev, fmt, ##args)
 #define __t_dev_err(_dev, fmt, args...)		dev_err(_dev, fmt, ##args)
 
-#if 1
-#define t_dev_info(_dev, fmt, args...)		__t_dev_info(_dev, fmt, ##args)
-#define t_dev_warn(_dev, fmt, args...)		__t_dev_warn(_dev, fmt, ##args)
-#else
 #define t_dev_info(_dev, fmt, args...)		__t_dev_none(_dev, fmt, ##args)
 #define t_dev_warn(_dev, fmt, args...)		__t_dev_none(_dev, fmt, ##args)
-#endif
 
 #define t_dev_trace(_dev, fmt, args...)		__t_dev_info(_dev, fmt, ##args)
-#define t_dev_err(_dev, fmt, args...)		__t_dev_err(_dev, fmt, ##args)
+#define t_dev_err(_dev, fmt, args...)		__t_dev_none(_dev, fmt, ##args)
 
 #define t_dev_info_sel(_dev, _prt, fmt, args...)	\
 		do {	\

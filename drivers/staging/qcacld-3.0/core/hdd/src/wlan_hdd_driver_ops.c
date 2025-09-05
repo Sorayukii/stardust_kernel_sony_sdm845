@@ -391,7 +391,7 @@ static int hdd_soc_probe(struct device *dev,
 {
 	int errno;
 
-	hdd_info("probing driver");
+	hdd_debug("probing driver");
 
 	hdd_soc_load_lock(dev, eHDD_DRV_OP_PROBE);
 	cds_set_load_in_progress(true);
@@ -438,7 +438,7 @@ static int hdd_soc_reinit(struct device *dev, void *bdev,
 {
 	int errno;
 
-	hdd_info("re-probing driver");
+	hdd_debug("re-probing driver");
 
 	hdd_soc_load_lock(dev, eHDD_DRV_OP_REINIT);
 	cds_set_recovery_in_progress(true);
@@ -794,7 +794,7 @@ static int __wlan_hdd_bus_suspend(struct wow_enable_params wow_params)
 	void *dp_pdev;
 	struct pmo_wow_enable_params pmo_params;
 
-	hdd_info("starting bus suspend");
+	hdd_debug("starting bus suspend");
 
 	hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
 	err = wlan_hdd_validate_context(hdd_ctx);
@@ -849,7 +849,7 @@ static int __wlan_hdd_bus_suspend(struct wow_enable_params wow_params)
 		goto resume_pmo;
 	}
 
-	hdd_info("bus suspend succeeded");
+	hdd_debug("bus suspend succeeded");
 	return 0;
 
 resume_pmo:
@@ -999,7 +999,7 @@ static int __wlan_hdd_bus_resume(void)
 	if (cds_is_driver_recovering())
 		return 0;
 
-	hdd_info("starting bus resume");
+	hdd_debug("starting bus resume");
 
 	status = wlan_hdd_validate_context(hdd_ctx);
 	if (status) {
@@ -1047,7 +1047,7 @@ static int __wlan_hdd_bus_resume(void)
 		goto out;
 	}
 
-	hdd_info("bus resume succeeded");
+	hdd_debug("bus resume succeeded");
 	return 0;
 
 out:
@@ -1566,7 +1566,7 @@ static void wlan_hdd_handle_the_pld_uevent(struct pld_uevent_data *uevent)
 	}
 
 	if (hdd_ctx->driver_status == DRIVER_MODULES_CLOSED) {
-		hdd_info("Driver modules are already closed!");
+		hdd_debug("Driver modules are already closed!");
 		return;
 	}
 
@@ -1581,7 +1581,7 @@ static void wlan_hdd_handle_the_pld_uevent(struct pld_uevent_data *uevent)
 			ucfg_ipa_fw_rejuvenate_send_msg(hdd_ctx->pdev);
 		break;
 	case PLD_FW_HANG_EVENT:
-		hdd_info("Received fimrware hang event");
+		hdd_debug("Received fimrware hang event");
 		cds_get_recovery_reason(&reason);
 		hang_evt_data.hang_data =
 				qdf_mem_malloc(QDF_HANG_EVENT_DATA_SIZE);
@@ -1631,7 +1631,7 @@ static void wlan_hdd_pld_uevent(struct device *dev,
 		return;
 	}
 
-	hdd_info("pld event %d", uevent->uevent);
+	hdd_debug("pld event %d", uevent->uevent);
 
 	wlan_hdd_set_the_pld_uevent(uevent);
 

@@ -135,7 +135,7 @@ static void hdd_enable_gtk_offload(struct hdd_adapter *adapter)
 
 	status = pmo_ucfg_enable_gtk_offload_in_fwr(adapter->vdev);
 	if (status != QDF_STATUS_SUCCESS)
-		hdd_info("Failed to enable gtk offload");
+		hdd_debug("Failed to enable gtk offload");
 }
 
 /**
@@ -166,7 +166,7 @@ static void hdd_disable_gtk_offload(struct hdd_adapter *adapter)
 	hdd_debug("send get_gtk_rsp successful");
 	status = pmo_ucfg_disable_gtk_offload_in_fwr(adapter->vdev);
 	if (status != QDF_STATUS_SUCCESS)
-		hdd_info("Failed to disable gtk offload");
+		hdd_debug("Failed to disable gtk offload");
 }
 
 
@@ -378,7 +378,7 @@ void hdd_enable_ns_offload(struct hdd_adapter *adapter,
 	/* check if offload cache and send is required or not */
 	status = ucfg_pmo_ns_offload_check(psoc, trigger, adapter->session_id);
 	if (QDF_IS_STATUS_ERROR(status)) {
-		hdd_info("NS offload is not required");
+		hdd_debug("NS offload is not required");
 		goto free_req;
 	}
 
@@ -508,7 +508,7 @@ static void hdd_enable_hw_filter(struct hdd_adapter *adapter)
 
 	status = pmo_ucfg_enable_hw_filter_in_fwr(adapter->vdev);
 	if (status != QDF_STATUS_SUCCESS)
-		hdd_info("Failed to enable hardware filter");
+		hdd_debug("Failed to enable hardware filter");
 
 	hdd_exit();
 }
@@ -521,7 +521,7 @@ static void hdd_disable_hw_filter(struct hdd_adapter *adapter)
 
 	status = pmo_ucfg_disable_hw_filter_in_fwr(adapter->vdev);
 	if (status != QDF_STATUS_SUCCESS)
-		hdd_info("Failed to disable hardware filter");
+		hdd_debug("Failed to disable hardware filter");
 
 	hdd_exit();
 }
@@ -560,13 +560,13 @@ void hdd_disable_host_offloads(struct hdd_adapter *adapter,
 	hdd_enter();
 
 	if (!ucfg_pmo_is_vdev_supports_offload(adapter->vdev)) {
-		hdd_info("offload is not supported on this vdev opmode: %d",
+		hdd_debug("offload is not supported on this vdev opmode: %d",
 				adapter->device_mode);
 			goto out;
 	}
 
 	if (!ucfg_pmo_is_vdev_connected(adapter->vdev)) {
-		hdd_info("vdev is not connected");
+		hdd_debug("vdev is not connected");
 		goto out;
 	}
 
@@ -894,13 +894,13 @@ void hdd_enable_arp_offload(struct hdd_adapter *adapter,
 
 	status = ucfg_pmo_check_arp_offload(psoc, trigger, adapter->session_id);
 	if (QDF_IS_STATUS_ERROR(status)) {
-		hdd_info("ARP offload not required");
+		hdd_debug("ARP offload not required");
 		goto free_req;
 	}
 
 	ifa = hdd_get_ipv4_local_interface(adapter);
 	if (!ifa || !ifa->ifa_local) {
-		hdd_info("IP Address is not assigned");
+		hdd_debug("IP Address is not assigned");
 		status = QDF_STATUS_NOT_INITIALIZED;
 		goto free_req;
 	}
@@ -950,7 +950,7 @@ void hdd_disable_arp_offload(struct hdd_adapter *adapter,
 		hdd_wlan_offload_event(PMO_IPV4_ARP_REPLY_OFFLOAD,
 			PMO_OFFLOAD_DISABLE);
 	else
-		hdd_info("fail to disable arp offload");
+		hdd_debug("fail to disable arp offload");
 }
 
 void hdd_enable_mc_addr_filtering(struct hdd_adapter *adapter,
@@ -1062,7 +1062,7 @@ hdd_suspend_wlan(void)
 	struct hdd_adapter *adapter = NULL;
 	uint32_t conn_state_mask = 0;
 
-	hdd_info("WLAN being suspended by OS");
+	hdd_debug("WLAN being suspended by OS");
 
 	hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
 	if (!hdd_ctx) {
@@ -1071,7 +1071,7 @@ hdd_suspend_wlan(void)
 	}
 
 	if (cds_is_driver_recovering() || cds_is_driver_in_bad_state()) {
-		hdd_info("Recovery in Progress. State: 0x%x Ignore suspend!!!",
+		hdd_debug("Recovery in Progress. State: 0x%x Ignore suspend!!!",
 			 cds_get_driver_state());
 		return -EINVAL;
 	}
@@ -1120,7 +1120,7 @@ static int hdd_resume_wlan(void)
 	struct hdd_adapter *adapter;
 	QDF_STATUS status;
 
-	hdd_info("WLAN being resumed by OS");
+	hdd_debug("WLAN being resumed by OS");
 
 	hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
 	if (!hdd_ctx) {
@@ -1129,7 +1129,7 @@ static int hdd_resume_wlan(void)
 	}
 
 	if (cds_is_driver_recovering() || cds_is_driver_in_bad_state()) {
-		hdd_info("Recovery in Progress. State: 0x%x Ignore resume!!!",
+		hdd_debug("Recovery in Progress. State: 0x%x Ignore resume!!!",
 			 cds_get_driver_state());
 		return -EINVAL;
 	}
@@ -1257,7 +1257,7 @@ QDF_STATUS hdd_wlan_shutdown(void)
 	struct hdd_adapter *adapter;
 	void *soc = cds_get_context(QDF_MODULE_ID_SOC);
 
-	hdd_info("WLAN driver shutting down!");
+	hdd_debug("WLAN driver shutting down!");
 
 	/* Get the HDD context. */
 	hdd_ctx = cds_get_context(QDF_MODULE_ID_HDD);
@@ -1333,7 +1333,7 @@ QDF_STATUS hdd_wlan_shutdown(void)
 	hdd_bus_bandwidth_deinit(hdd_ctx);
 	hdd_lpass_notify_stop(hdd_ctx);
 
-	hdd_info("WLAN driver shutdown complete");
+	hdd_debug("WLAN driver shutdown complete");
 
 	return QDF_STATUS_SUCCESS;
 }
@@ -1490,7 +1490,7 @@ QDF_STATUS hdd_wlan_re_init(void)
 	hdd_restore_sar_config(hdd_ctx);
 
 	hdd_send_default_scan_ies(hdd_ctx);
-	hdd_info("WLAN host driver reinitiation completed!");
+	hdd_debug("WLAN host driver reinitiation completed!");
 
 	if (hdd_ctx->config->sap_internal_restart)
 		hdd_ssr_restart_sap(hdd_ctx);
@@ -2411,7 +2411,7 @@ int hdd_set_qpower_config(struct hdd_context *hddctx,
 	}
 	if (adapter->device_mode != QDF_STA_MODE &&
 	    adapter->device_mode != QDF_P2P_CLIENT_MODE) {
-		hdd_info("QPOWER only allowed in STA/P2P-Client modes:%d",
+		hdd_debug("QPOWER only allowed in STA/P2P-Client modes:%d",
 			 adapter->device_mode);
 		return -EINVAL;
 	}
@@ -2428,7 +2428,7 @@ int hdd_set_qpower_config(struct hdd_context *hddctx,
 			qpower = PS_LEGACY_NODEEPSLEEP;
 		else
 			qpower = PS_LEGACY_DEEPSLEEP;
-		hdd_info("Qpower disabled, %d", qpower);
+		hdd_debug("Qpower disabled, %d", qpower);
 	}
 	status = wma_set_qpower_config(adapter->session_id, qpower);
 	if (status != QDF_STATUS_SUCCESS) {
@@ -2463,7 +2463,7 @@ static void __hdd_wlan_fake_apps_resume(struct wiphy *wiphy,
 	struct hif_opaque_softc *hif_ctx;
 	qdf_device_t qdf_dev;
 
-	hdd_info("Unit-test resume WLAN");
+	hdd_debug("Unit-test resume WLAN");
 
 	qdf_dev = cds_get_context(QDF_MODULE_ID_QDF_DEVICE);
 	if (!qdf_dev) {
@@ -2513,7 +2513,7 @@ static void __hdd_wlan_fake_apps_resume(struct wiphy *wiphy,
  */
 static void hdd_wlan_fake_apps_resume_irq_callback(void)
 {
-	hdd_info("Trigger unit-test resume WLAN");
+	hdd_debug("Trigger unit-test resume WLAN");
 
 	QDF_BUG(g_wiphy);
 	QDF_BUG(g_dev);
@@ -2544,7 +2544,7 @@ int hdd_wlan_fake_apps_suspend(struct wiphy *wiphy, struct net_device *dev,
 		return -EINVAL;
 	}
 
-	hdd_info("Unit-test suspend WLAN");
+	hdd_debug("Unit-test suspend WLAN");
 
 	if (pause_setting < WOW_INTERFACE_PAUSE_DEFAULT ||
 	    pause_setting >= WOW_INTERFACE_PAUSE_COUNT) {

@@ -1817,7 +1817,7 @@ static int32_t cam_icp_mgr_process_msg(void *priv, void *data)
 
 	rc = hfi_read_message(icp_hw_mgr.msg_buf, Q_MSG, &read_len);
 	if (rc) {
-		CAM_ERR(CAM_ICP, "Unable to read msg q");
+		CAM_DBG(CAM_ICP, "Unable to read msg q");
 	} else {
 		read_len = read_len << BYTE_WORD_SHIFT;
 		msg_ptr = (uint32_t *)icp_hw_mgr.msg_buf;

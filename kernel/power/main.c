@@ -583,7 +583,7 @@ suspend_backoff(u32 timeout_msecs)
 	if (!sbo_enabled)
 		return;
 
-	pr_info("suspend: too many immediate wakeups, back off (%u msecs)\n",
+	pr_debug("suspend: too many immediate wakeups, back off (%u msecs)\n",
 			timeout_msecs);
 
 	__pm_wakeup_event(ws, timeout_msecs);

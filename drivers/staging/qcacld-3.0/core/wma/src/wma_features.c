@@ -1825,8 +1825,8 @@ static void wma_inc_wow_stats(t_wma_handle *wma,
 
 static void wma_wow_stats_display(struct wake_lock_stats *stats)
 {
-	WMA_LOGA("WLAN wake reason counters:");
-	WMA_LOGA("uc:%d bc:%d v4_mc:%d v6_mc:%d ra:%d ns:%d na:%d "
+	WMA_LOGD("WLAN wake reason counters:");
+	WMA_LOGD("uc:%d bc:%d v4_mc:%d v6_mc:%d ra:%d ns:%d na:%d "
 		 "icmp:%d icmpv6:%d",
 		 stats->ucast_wake_up_count,
 		 stats->bcast_wake_up_count,
@@ -1838,7 +1838,7 @@ static void wma_wow_stats_display(struct wake_lock_stats *stats)
 		 stats->icmpv4_count,
 		 stats->icmpv6_count);
 
-	WMA_LOGA("assoc:%d disassoc:%d assoc_resp:%d reassoc:%d "
+	WMA_LOGD("assoc:%d disassoc:%d assoc_resp:%d reassoc:%d "
 		 "reassoc_resp:%d auth:%d deauth:%d action:%d",
 		 stats->mgmt_assoc,
 		 stats->mgmt_disassoc,
@@ -1849,7 +1849,7 @@ static void wma_wow_stats_display(struct wake_lock_stats *stats)
 		 stats->mgmt_deauth,
 		 stats->mgmt_action);
 
-	WMA_LOGA("pno_match:%d pno_complete:%d gscan:%d "
+	WMA_LOGD("pno_match:%d pno_complete:%d gscan:%d "
 		 "low_rssi:%d rssi_breach:%d oem:%d scan_11d:%d",
 		 stats->pno_match_wake_up_count,
 		 stats->pno_complete_wake_up_count,
@@ -1891,7 +1891,7 @@ static void wma_print_wow_stats(t_wma_handle *wma,
  */
 static void wma_wow_stats_display(struct sir_vdev_wow_stats *stats)
 {
-	WMA_LOGA("uc %d bc %d v4_mc %d v6_mc %d ra %d ns %d na %d pno_match %d pno_complete %d gscan %d low_rssi %d rssi_breach %d icmp %d icmpv6 %d oem %d",
+	WMA_LOGD("uc %d bc %d v4_mc %d v6_mc %d ra %d ns %d na %d pno_match %d pno_complete %d gscan %d low_rssi %d rssi_breach %d icmp %d icmpv6 %d oem %d",
 		stats->ucast,
 		stats->bcast,
 		stats->ipv4_mcast,
@@ -2754,7 +2754,7 @@ static void wma_acquire_wow_wakelock(t_wma_handle *wma, int wake_reason)
 		return;
 	}
 
-	WMA_LOGA("Holding %d msec wake_lock", ms);
+	WMA_LOGD("Holding %d msec wake_lock", ms);
 	cds_host_diag_log_work(wl, ms, WIFI_POWER_EVENT_WAKELOCK_WOW);
 	qdf_wake_lock_timeout_acquire(wl, ms);
 }
@@ -2780,7 +2780,7 @@ wma_wake_reason_ap_assoc_lost(t_wma_handle *wma, void *event, uint32_t len)
 	}
 
 	roam_event = event_param->fixed_param;
-	WMA_LOGA(FL("Beacon miss indication on vdev %d"), roam_event->vdev_id);
+	WMA_LOGD(FL("Beacon miss indication on vdev %d"), roam_event->vdev_id);
 
 	wma_beacon_miss_handler(wma, roam_event->vdev_id, roam_event->rssi);
 
@@ -3094,13 +3094,13 @@ static void wma_wake_event_log_reason(t_wma_handle *wma,
 	/* "Unspecified" means APPS triggered wake, else firmware triggered */
 	if (wake_info->wake_reason != WOW_REASON_UNSPECIFIED) {
 		vdev = &wma->interfaces[wake_info->vdev_id];
-		WMA_LOGA("WLAN triggered wakeup: %s (%d), vdev: %d (%s)",
+		WMA_LOGD("WLAN triggered wakeup: %s (%d), vdev: %d (%s)",
 			 wma_wow_wake_reason_str(wake_info->wake_reason),
 			 wake_info->wake_reason,
 			 wake_info->vdev_id,
 			 wma_vdev_type_str(vdev->type));
 	} else if (!wmi_get_runtime_pm_inprogress(wma->wmi_handle)) {
-		WMA_LOGA("Non-WLAN triggered wakeup: %s (%d)",
+		WMA_LOGD("Non-WLAN triggered wakeup: %s (%d)",
 			 wma_wow_wake_reason_str(wake_info->wake_reason),
 			 wake_info->wake_reason);
 	}
@@ -3213,7 +3213,7 @@ int wma_pdev_resume_event_handler(void *handle, uint8_t *event, uint32_t len)
 {
 	tp_wma_handle wma = (tp_wma_handle) handle;
 
-	WMA_LOGA("Received PDEV resume event");
+	WMA_LOGD("Received PDEV resume event");
 
 	pmo_ucfg_psoc_wakeup_host_event_received(wma->psoc);
 
@@ -5792,7 +5792,7 @@ int wma_unified_beacon_debug_stats_event_handler(void *handle,
 	param_tlvs =
 	   (WMI_VDEV_BCN_RECEPTION_STATS_EVENTID_param_tlvs *)cmd_param_info;
 	if (!param_tlvs) {
-		WMA_LOGA("%s: Invalid stats event", __func__);
+		WMA_LOGD("%s: Invalid stats event", __func__);
 		return -EINVAL;
 	}
 
@@ -5902,13 +5902,13 @@ int wma_chan_info_event_handler(void *handle, uint8_t *event_buf,
 		param_buf =
 			(WMI_CHAN_INFO_EVENTID_param_tlvs *)event_buf;
 		if (!param_buf) {
-			WMA_LOGA("%s: Invalid chan info event", __func__);
+			WMA_LOGD("%s: Invalid chan info event", __func__);
 			return -EINVAL;
 		}
 
 		event = param_buf->fixed_param;
 		if (!event) {
-			WMA_LOGA("%s: Invalid fixed param", __func__);
+			WMA_LOGD("%s: Invalid fixed param", __func__);
 			return -EINVAL;
 		}
 		buf.tx_frame_count = event->tx_frame_cnt;

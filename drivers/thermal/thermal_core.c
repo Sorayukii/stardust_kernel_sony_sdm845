@@ -568,7 +568,7 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
 	 */
 	ret = tz->ops->set_trips(tz, low, high);
 	if (ret)
-		dev_err(&tz->device, "Failed to set trips: %d\n", ret);
+		dev_dbg(&tz->device, "Failed to set trips: %d\n", ret);
 	trace_thermal_set_trip(tz);
 
 exit:
@@ -600,7 +600,7 @@ static void update_temperature(struct thermal_zone_device *tz)
 	ret = thermal_zone_get_temp(tz, &temp);
 	if (ret) {
 		if (ret != -EAGAIN)
-			dev_warn(&tz->device,
+			dev_dbg(&tz->device,
 				 "failed to read out thermal zone (%d)\n",
 				 ret);
 		return;

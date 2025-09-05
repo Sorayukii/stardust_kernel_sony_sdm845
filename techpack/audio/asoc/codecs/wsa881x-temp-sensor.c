@@ -100,7 +100,7 @@ temp_retry:
 	    (reg.d2_msb < 185 || reg.d2_msb > 218) ||
 	    (!(reg.d2_lsb == 0 || reg.d2_lsb == 64 || reg.d2_lsb == 128 ||
 		reg.d2_lsb == 192))) {
-		printk_ratelimited("%s: Temperature registers[%d %d %d %d] are out of range\n",
+		pr_debug_ratelimited("%s: Temperature registers[%d %d %d %d] are out of range\n",
 				   __func__, reg.d1_msb, reg.d1_lsb, reg.d2_msb,
 				   reg.d2_lsb);
 	}
@@ -115,7 +115,7 @@ temp_retry:
 
 	if (temp_val <= LOW_TEMP_THRESHOLD ||
 		temp_val >= HIGH_TEMP_THRESHOLD) {
-		printk_ratelimited("%s: T0: %d is out of range[%d, %d]\n",
+		pr_debug_ratelimited("%s: T0: %d is out of range[%d, %d]\n",
 				   __func__, temp_val, LOW_TEMP_THRESHOLD,
 				   HIGH_TEMP_THRESHOLD);
 		if (retry--) {
