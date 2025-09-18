@@ -2564,7 +2564,7 @@ static int v4l_enum_freq_bands(const struct v4l2_ioctl_ops *ops,
 struct v4l2_ioctl_info {
 	unsigned int ioctl;
 	u32 flags;
-	const char * const name;
+	const char *name;
 	int (*func)(const struct v4l2_ioctl_ops *ops, struct file *file,
 		    void *fh, void *p);
 	void (*debug)(const void *arg, bool write_only);

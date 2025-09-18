@@ -69,7 +69,7 @@ struct kernel_param {
 	const char *name;
 	struct module *mod;
 	const struct kernel_param_ops *ops;
-	const u16 perm;
+	u16 perm;
 	s8 level;
 	u8 flags;
 	union {

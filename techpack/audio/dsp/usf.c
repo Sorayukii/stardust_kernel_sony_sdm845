@@ -1767,7 +1767,7 @@ static long usf_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 struct us_xx_info_type32 {
 /* Input:  general info */
 /* Name of the client - event calculator, ptr to char */
-	const compat_uptr_t client_name;
+	compat_uptr_t client_name;
 /* Selected device identification, accepted in the kernel's CAD */
 	uint32_t dev_id;
 /* 0 - point_epos type; (e.g. 1 - gr_mmrd) */

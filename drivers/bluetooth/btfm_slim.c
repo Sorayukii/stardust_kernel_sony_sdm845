@@ -286,8 +286,8 @@ error:
 static int btfm_slim_get_logical_addr(struct slim_device *slim)
 {
 	int ret = 0;
-	const unsigned long timeout = jiffies +
-			      msecs_to_jiffies(SLIM_SLAVE_PRESENT_TIMEOUT);
+	unsigned long timeout = jiffies +
+			msecs_to_jiffies(SLIM_SLAVE_PRESENT_TIMEOUT);
 
 	do {
 		ret = slim_get_logical_addr(slim, slim->e_addr,
