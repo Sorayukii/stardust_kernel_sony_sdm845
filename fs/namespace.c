@@ -48,7 +48,7 @@ extern void susfs_auto_add_sus_ksu_default_mount(const char __user *to_pathname)
 bool susfs_is_auto_add_sus_ksu_default_mount_enabled = true;
 #endif
 #ifdef CONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT
-extern int susfs_auto_add_sus_bind_mount(const char *pathname, struct path *path_target);
+extern void susfs_auto_add_sus_bind_mount(const char *pathname, struct path *path_target);
 bool susfs_is_auto_add_sus_bind_mount_enabled = true;
 #endif
 #ifdef CONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT
@@ -2563,12 +2563,13 @@ static int do_loopback(struct path *path, const char *old_name,
 	// - Check if bind mounted path should be hidden and umounted automatically.
 	// And we target only process with ksu domain.
 	if (!susfs_is_boot_completed_triggered &&
-		(susfs_is_current_ksu_domain() || !strcmp(mnt->mnt_devname, "KSU")))
+		(susfs_is_current_ksu_domain() ||
+		!strcmp(mnt->mnt_devname, "KSU") ||
+		strstr("/adb/", old_name)))
 	{
 #if defined(CONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT)
-		if (susfs_is_auto_add_sus_bind_mount_enabled &&
-				susfs_auto_add_sus_bind_mount(old_name, &old_path)) {
-			goto orig_flow;
+		if (susfs_is_auto_add_sus_bind_mount_enabled) {
+			susfs_auto_add_sus_bind_mount(old_name, &old_path);
 		}
 #endif
 #if defined(CONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT)
@@ -2577,9 +2578,6 @@ static int do_loopback(struct path *path, const char *old_name,
 		}
 #endif
 	}
-#if defined(CONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT)
-orig_flow:
-#endif
 #endif // #if defined(CONFIG_KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT) || defined(CONFIG_KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT)
 
 out2:
