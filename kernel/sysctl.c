@@ -152,6 +152,7 @@ static const int cap_last_cap = CAP_LAST_CAP;
 
 #ifdef CONFIG_SCHED_BORE
 extern uint sched_bore;
+extern uint sched_burst_exclude_kthreads;
 extern uint sched_burst_smoothness_long;
 extern uint sched_burst_smoothness_short;
 extern uint sched_burst_fork_atavistic;
@@ -428,6 +429,15 @@ static struct ctl_table kern_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= &one,
+		.extra2		= &one,
+	},
+	{
+		.procname	= "sched_burst_exclude_kthreads",
+		.data		= &sched_burst_exclude_kthreads,
+		.maxlen		= sizeof(int),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= &zero,
 		.extra2		= &one,
 	},
 	{
