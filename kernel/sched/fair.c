@@ -794,7 +794,7 @@ uint __read_mostly sched_burst_fork_atavistic   = 2;
 uint __read_mostly sched_burst_penalty_offset   = 22;
 uint __read_mostly sched_burst_penalty_scale    = 1280;
 uint __read_mostly sched_burst_cache_stop_count = 20;
-uint __read_mostly sched_burst_cache_lifetime   = 60000000;
+uint __read_mostly sched_burst_cache_lifetime   = 75000000;
 
 #define MAX_BURST_PENALTY (39U <<2)
 
