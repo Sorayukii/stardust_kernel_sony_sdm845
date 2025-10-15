@@ -151,7 +151,6 @@ static int ngroups_max = NGROUPS_MAX;
 static const int cap_last_cap = CAP_LAST_CAP;
 
 #ifdef CONFIG_SCHED_BORE
-extern uint sched_bore;
 extern uint sched_burst_exclude_kthreads;
 extern uint sched_burst_smoothness_long;
 extern uint sched_burst_smoothness_short;
@@ -423,15 +422,6 @@ static struct ctl_table kern_table[] = {
 		.extra2		= &one_thousand,
 	},
 #ifdef CONFIG_SCHED_BORE
-	{
-		.procname	= "sched_bore",
-		.data		= &sched_bore,
-		.maxlen		= sizeof(int),
-		.mode		= 0644,
-		.proc_handler	= proc_dointvec_minmax,
-		.extra1		= &one,
-		.extra2		= &one,
-	},
 	{
 		.procname	= "sched_burst_exclude_kthreads",
 		.data		= &sched_burst_exclude_kthreads,
