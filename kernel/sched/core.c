@@ -2344,6 +2344,7 @@ void __dl_clear_params(struct task_struct *p)
 
 #ifdef CONFIG_SCHED_BORE
 extern int sched_burst_fork_atavistic;
+extern int sched_burst_cache_stop_count;
 extern int sched_burst_cache_lifetime;
 
 static void __init sched_init_bore(void) {
@@ -2396,6 +2397,7 @@ static inline void update_child_burst_direct(struct task_struct *p, u64 now) {
 		if (!task_burst_inheritable(child)) continue;
 		cnt++;
 		sum += child->se.burst_penalty;
+		if (unlikely(sched_burst_cache_stop_count <= cnt)) break;
 	}
 
 	__update_child_burst_cache(p, cnt, sum, now);
@@ -2424,11 +2426,13 @@ static void update_child_burst_topological(
 			if (!task_burst_inheritable(dec)) continue;
 			cnt++;
 			sum += dec->se.burst_penalty;
+			if (unlikely(sched_burst_cache_stop_count <= cnt)) break;
 			continue;
 		}
 		if (!child_burst_cache_expired(dec, now)) {
 			cnt += dec->se.child_burst_cnt;
 			sum += (u32)dec->se.child_burst * dec->se.child_burst_cnt;
+			if (unlikely(sched_burst_cache_stop_count <= cnt)) break;
 			continue;
 		}
 		update_child_burst_topological(dec, now, depth - 1, &cnt, &sum);

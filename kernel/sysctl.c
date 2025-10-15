@@ -158,6 +158,7 @@ extern uint sched_burst_smoothness_short;
 extern uint sched_burst_fork_atavistic;
 extern uint sched_burst_penalty_offset;
 extern uint sched_burst_penalty_scale;
+extern uint sched_burst_cache_stop_count;
 extern uint sched_burst_cache_lifetime;
 static int __maybe_unused sixty_four     = 64;
 static int __maybe_unused maxval_12_bits = 4095;
@@ -484,6 +485,13 @@ static struct ctl_table kern_table[] = {
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= &zero,
 		.extra2		= &maxval_12_bits,
+	},
+	{
+		.procname	= "sched_burst_cache_stop_count",
+		.data		= &sched_burst_cache_stop_count,
+		.maxlen		= sizeof(uint),
+		.mode		= 0644,
+		.proc_handler = proc_dointvec,
 	},
 	{
 		.procname	= "sched_burst_cache_lifetime",
