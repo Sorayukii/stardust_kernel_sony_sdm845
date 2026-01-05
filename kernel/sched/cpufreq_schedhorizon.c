@@ -28,8 +28,8 @@
 /* Define default efficient_freq and up_delay */
 static unsigned int default_efficient_freq_little[] = {0};
 static unsigned int default_up_delay_little[] = {0};
-static unsigned int default_efficient_freq_big[] = {0};
-static unsigned int default_up_delay_big[] = {0};
+static unsigned int default_efficient_freq_big[] = {2169600};
+static unsigned int default_up_delay_big[] = {90};
 
 struct sugov_tunables {
 	struct gov_attr_set attr_set;
@@ -1043,11 +1043,11 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	/*
 	 * NOTE:
-	 * intializing up_rate/down_rate to 0 explicitly in kernel
+	 * intializing up_rate/down_rate explicitly in kernel
 	 * since WALT expects so by default.
 	 */
-	tunables->up_rate_limit_us = 0;
-	tunables->down_rate_limit_us = 0;
+	tunables->up_rate_limit_us = 500;
+	tunables->down_rate_limit_us = 20000;
 
 	/* Intializing efficient_freq and up_delay for each cluster */
 	if (policy->cpu >= 0 && policy->cpu <= 3) {
