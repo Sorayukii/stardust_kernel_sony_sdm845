@@ -726,6 +726,7 @@ static int fg_get_jeita_threshold(struct fg_chip *chip,
 
 #define BATT_TEMP_NUMR		1
 #define BATT_TEMP_DENR		1
+#define BATT_TEMP_HACK		20
 #if defined(CONFIG_SOMC_CHARGER_EXTENSION)
 #define CONV_BATT_TEMP_DEGC_FROM_LSB(t)	(t * 25 / 10 - 2730)
 #endif
@@ -754,6 +755,10 @@ static int fg_get_battery_temp(struct fg_chip *chip, int *val)
 	/* Value is in Kelvin; Convert it to deciDegC with keeping accuracy */
 	*val = CONV_BATT_TEMP_DEGC_FROM_LSB(temp);
 #endif
+
+	/* Reduce temp after conversion */
+	*val -= BATT_TEMP_HACK;
+
 	return 0;
 }
 
