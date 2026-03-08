@@ -23,6 +23,7 @@
 #include <linux/blkdev.h>
 #include <linux/psi.h>
 #include <linux/uio.h>
+#include <linux/kfifo.h>
 #include <asm/pgtable.h>
 
 static struct bio *get_swap_bio(gfp_t gfp_flags,
@@ -231,7 +232,6 @@ bad_bmap:
 
 static bool swap_sched_async_compress(struct page *page)
 {
-	struct swap_info_struct *sis;
 	pg_data_t *pgdat = NODE_DATA(nid);
 
 	if (unlikely(!pgdat->kcompressd))
@@ -243,13 +243,10 @@ static bool swap_sched_async_compress(struct page *page)
 	if (!PageAnon(page))
 		return false;
 
-	sis = page_swap_info(page);
-	if (data_race(sis->flags & SWP_SYNCHRONOUS_IO)) {
-		if (kfifo_avail(&pgdat->kcompress_fifo) >= sizeof(page) &&
-			kfifo_in(&pgdat->kcompress_fifo, &page, sizeof(page))) {
-			wake_up_interruptible(&pgdat->kcompressd_wait);
-			return true;
-		}
+	if (kfifo_avail(pgdat->kcompress_fifo) >= sizeof(page) &&
+	    kfifo_in(pgdat->kcompress_fifo, &page, sizeof(page))) {
+		wake_up_interruptible(&pgdat->kcompressd_wait);
+		return true;
 	}
 
 	return false;
@@ -315,10 +312,10 @@ int kcompressd(void *p)
 
 	while (!kthread_should_stop()) {
 		wait_event_interruptible(pgdat->kcompressd_wait,
-				!kfifo_is_empty(&pgdat->kcompress_fifo));
+				!kfifo_is_empty(pgdat->kcompress_fifo));
 
-		while (!kfifo_is_empty(&pgdat->kcompress_fifo)) {
-			if (kfifo_out(&pgdat->kcompress_fifo, &page, sizeof(page))) {
+		while (!kfifo_is_empty(pgdat->kcompress_fifo)) {
+			if (kfifo_out(pgdat->kcompress_fifo, &page, sizeof(page))) {
 				__swap_writepage(page, &wbc, end_swap_bio_write);
 			}
 		}
