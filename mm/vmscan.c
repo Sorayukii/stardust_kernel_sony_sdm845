@@ -48,6 +48,7 @@
 #include <linux/printk.h>
 #include <linux/dax.h>
 #include <linux/psi.h>
+#include <linux/kfifo.h>
 
 #include <asm/tlbflush.h>
 #include <asm/div64.h>
@@ -3730,9 +3731,13 @@ int kswapd_run(int nid)
 		pgdat->kswapd = NULL;
 	}
 
-	ret = kfifo_alloc(&pgdat->kcompress_fifo,
-			KCOMPRESS_FIFO_SIZE * sizeof(struct page *),
-			GFP_KERNEL);
+	pgdat->kcompress_fifo = kmalloc(sizeof(struct kfifo), GFP_KERNEL);
+	if (!pgdat->kcompress_fifo)
+		return -ENOMEM;
+
+	ret = kfifo_alloc(pgdat->kcompress_fifo,
+		KCOMPRESS_FIFO_SIZE * sizeof(struct page *),
+		GFP_KERNEL);
 	if (ret) {
 		pr_err("%s: fail to kfifo_alloc\n", __func__);
 		return ret;
@@ -3741,11 +3746,12 @@ int kswapd_run(int nid)
 	pgdat->kcompressd = kthread_create_on_node(kcompressd, pgdat, nid,
 			"kcompressd%d", nid);
 	if (IS_ERR(pgdat->kcompressd)) {
-		pr_err("Failed to start kcompressd on node %d，ret=%ld\n",
+		pr_err("Failed to start kcompressd on node %d, ret=%ld\n",
 				nid, PTR_ERR(pgdat->kcompressd));
 		pgdat->kcompressd = NULL;
-		kfifo_free(&pgdat->kcompress_fifo);
+		kfifo_free(pgdat->kcompress_fifo);
 	} else {
+		pr_info("kcompressd started on node %d\n", nid);
 		wake_up_process(pgdat->kcompressd);
 	}
 
@@ -3769,7 +3775,7 @@ void kswapd_stop(int nid)
 	if (pgdat->kcompressd) {
 		kthread_stop(pgdat->kcompressd);
 		pgdat->kcompressd = NULL;
-		kfifo_free(&pgdat->kcompress_fifo);
+		kfifo_free(pgdat->kcompress_fifo);
 	}
 }
 
