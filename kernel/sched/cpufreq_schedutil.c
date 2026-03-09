@@ -856,7 +856,8 @@ static int sugov_init(struct cpufreq_policy *policy)
 	tunables->up_rate_limit_us = 0;
 	tunables->down_rate_limit_us = 0;
 
-	tunables->iowait_boost_enable = false;
+	/* Enable iowait_boost by default */
+	tunables->iowait_boost_enable = true;
 
 	/* Disable exponential frequency scaling by default */
 	tunables->exp_util = false;
