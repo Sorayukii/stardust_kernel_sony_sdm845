@@ -160,6 +160,7 @@ extern int mmap_rnd_compat_bits __read_mostly;
 extern int sysctl_max_map_count;
 
 extern unsigned int sysctl_workingset_protection;
+extern unsigned int sysctl_anon_low_ratio;
 extern unsigned int sysctl_anon_min_ratio;
 extern unsigned int sysctl_clean_low_ratio;
 extern unsigned int sysctl_clean_min_ratio;

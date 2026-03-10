@@ -675,6 +675,24 @@ config BALANCE_ANON_FILE_RECLAIM
 	  Swapping anonymous pages out to memory can be efficient enough to justify
 	  treating anonymous and file backed pages equally.
 
+config ANON_LOW_RATIO
+	int "Default value for vm.anon_low_ratio"
+	depends on SYSCTL
+	range 0 100
+	help
+	  This option sets the default value for vm.anon_low_ratio sysctl knob.
+
+	  This knob provides *best-effort* protection of anonymous pages. The anonymous pages
+	  on the current node won't be reclaimed under any conditions when their amount
+	  is below vm.anon_low_ratio *unless* we threaten to OOM.
+	  
+	  Unlike vm.anon_min_ratio, this parameter does not provide strict protection.
+	  When the system approaches an out-of-memory condition, the kernel may still
+	  reclaim anonymous pages even if their amount is below vm.anon_low_ratio.
+	  
+	  Setting this value too high (close to 100) can result in earlier reclaim of 
+	  file-backed pages and increased pressure on the page cache.
+
 config ANON_MIN_RATIO
 	int "Default value for vm.anon_min_ratio"
 	depends on SYSCTL
