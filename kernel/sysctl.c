@@ -1839,6 +1839,16 @@ static struct ctl_table vm_table[] = {
 		.extra2		= &one,
 	},
 	{
+		.procname	= "anon_low_ratio",
+		.data		= &sysctl_anon_low_ratio,
+		.maxlen		= sizeof(sysctl_anon_low_ratio),
+		.mode		= 0644,
+		.proc_handler = vm_workingset_protection_update_handler,
+		.extra1		= &zero,
+		.extra2		= &one_hundred,
+
+	},
+	{
 		.procname	= "anon_min_ratio",
 		.data		= &sysctl_anon_min_ratio,
 		.maxlen		= sizeof(sysctl_anon_min_ratio),

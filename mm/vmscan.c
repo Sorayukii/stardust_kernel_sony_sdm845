@@ -68,6 +68,9 @@ struct scan_control {
 	/* This context's GFP mask */
 	gfp_t gfp_mask;
 
+	/* The anonymous pages on the current node are below vm.anon_low_ratio */
+	unsigned int anon_below_low:1;
+
 	/* The anonymous pages on the current node are below vm.anon_min_ratio */
 	unsigned int anon_below_min:1;
 
@@ -158,9 +161,11 @@ struct scan_control {
 #endif
 
 unsigned int sysctl_workingset_protection __read_mostly = 1;
+unsigned int sysctl_anon_low_ratio  __read_mostly = CONFIG_ANON_LOW_RATIO;
 unsigned int sysctl_anon_min_ratio  __read_mostly = CONFIG_ANON_MIN_RATIO;
 unsigned int sysctl_clean_low_ratio __read_mostly = CONFIG_CLEAN_LOW_RATIO;
 unsigned int sysctl_clean_min_ratio __read_mostly = CONFIG_CLEAN_MIN_RATIO;
+static u64 sysctl_anon_low_ratio_kb  __read_mostly = 0;
 static u64 sysctl_anon_min_ratio_kb  __read_mostly = 0;
 static u64 sysctl_clean_low_ratio_kb __read_mostly = 0;
 static u64 sysctl_clean_min_ratio_kb __read_mostly = 0;
@@ -2229,6 +2234,7 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 	 * if sysctl workingset protection is disabled
 	 */
 	if (sysctl_workingset_protection <= 0) {
+		sc->anon_below_low = 0;
 		sc->anon_below_min = 0;
 		sc->clean_below_low = 0;
 		sc->clean_below_min = 0;
@@ -2239,9 +2245,10 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 	 * Update working set protection thresholds
 	 * if sysctl ratios are configured.
 	 */
-	if (likely(sysctl_anon_min_ratio  ||
-	           sysctl_clean_low_ratio ||
-		       sysctl_clean_min_ratio)) {
+	if (likely(sysctl_anon_low_ratio ||
+		   sysctl_anon_min_ratio ||
+		   sysctl_clean_low_ratio ||
+		   sysctl_clean_min_ratio)) {
 
 		/* Get total memory of the current NUMA node */
 #ifdef CONFIG_NUMA
@@ -2256,8 +2263,10 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 		 * and convert percentage ratio into kbytes.
 		 */
 		if (unlikely(workingset_protection_prev_totalram != node_mem_total)) {
-			sysctl_anon_min_ratio_kb  =
-				node_mem_total * sysctl_anon_min_ratio  / 100;
+			sysctl_anon_low_ratio_kb =
+				node_mem_total * sysctl_anon_low_ratio / 100;
+			sysctl_anon_min_ratio_kb =
+				node_mem_total * sysctl_anon_min_ratio / 100;
 			sysctl_clean_low_ratio_kb =
 				node_mem_total * sysctl_clean_low_ratio / 100;
 			sysctl_clean_min_ratio_kb =
@@ -2270,7 +2279,7 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 	 * Check the number of anonymous pages to protect them from
 	 * reclaiming if their amount is below the specified.
 	 */
-	if (sysctl_anon_min_ratio) {
+	if (sysctl_anon_low_ratio || sysctl_anon_min_ratio) {
 		unsigned long reclaimable_anon;
 
 		reclaimable_anon =
@@ -2278,8 +2287,10 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 			node_page_state(pgdat, NR_INACTIVE_ANON) +
 			node_page_state(pgdat, NR_ISOLATED_ANON);
 
+		sc->anon_below_low = reclaimable_anon < sysctl_anon_low_ratio_kb;
 		sc->anon_below_min = reclaimable_anon < sysctl_anon_min_ratio_kb;
 	} else {
+		sc->anon_below_low = 0;
 		sc->anon_below_min = 0;
 	}
 
