@@ -926,3 +926,13 @@ config OKL4_LINK_SHBUF
 	  transport. This driver presents the link to Linux as a character device
 	  which can be written to or read from to access the shared memory. An ioctl
 	  on the device is used to send a virtual interrupt to the partner cell.
+
+config ONESEG_TUNER_SMTVJ19X
+	tristate "ONESEG tuner driver for SMT-VJ19x"
+	default n
+	depends on SPI
+	help
+	  Select this module to enable 1seg Tuner Driver which supports
+	  1seg contents viewing.
+	  This module controls power switching and reset switching of
+	  SMT-VJ19x.
