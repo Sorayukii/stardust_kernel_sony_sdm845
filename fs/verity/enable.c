@@ -210,8 +210,9 @@ static int enable_verity(struct file *filp,
 
 	/* Get the salt if the user provided one */
 	if (arg->salt_size &&
-	    copy_from_user(desc->salt, u64_to_user_ptr(arg->salt_ptr),
-			   arg->salt_size)) {
+	    copy_from_user(desc->salt,
+			   (void __user *)(uintptr_t)arg->salt_ptr,
+			    arg->salt_size)) {
 		err = -EFAULT;
 		goto out;
 	}
@@ -219,8 +220,9 @@ static int enable_verity(struct file *filp,
 
 	/* Get the signature if the user provided one */
 	if (arg->sig_size &&
-	    copy_from_user(desc->signature, u64_to_user_ptr(arg->sig_ptr),
-			   arg->sig_size)) {
+	    copy_from_user(desc->signature,
+			   (void __user *)(uintptr_t)arg->sig_ptr,
+			    arg->sig_size)) {
 		err = -EFAULT;
 		goto out;
 	}
