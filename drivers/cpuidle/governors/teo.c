@@ -100,7 +100,7 @@
 #include <linux/cpuidle.h>
 #include <linux/jiffies.h>
 #include <linux/kernel.h>
-#include <linux/sched/clock.h>
+#include <linux/sched.h>
 #include <linux/tick.h>
 
 /*
@@ -158,7 +158,7 @@ static DEFINE_PER_CPU(struct teo_cpu, teo_cpus);
 static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
 {
 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
-	unsigned int sleep_length_us = ktime_to_us(cpu_data->sleep_length_ns);
+	unsigned int sleep_length_us = ktime_to_us(ns_to_ktime(cpu_data->sleep_length_ns));
 	int i, idx_timer = 0, idx_duration = 0;
 	unsigned int measured_us;
 
@@ -309,8 +309,8 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
 
 	cpu_data->time_span_ns = local_clock();
 
-	cpu_data->sleep_length_ns = tick_nohz_get_sleep_length(&delta_tick);
-	duration_us = ktime_to_us(cpu_data->sleep_length_ns);
+	cpu_data->sleep_length_ns = ktime_to_ns(tick_nohz_get_sleep_length(&delta_tick));
+	duration_us = ktime_to_us(ns_to_ktime(cpu_data->sleep_length_ns));
 
 	/* Check if there is any choice in the first place. */
 	if (drv->state_count < 2) {
