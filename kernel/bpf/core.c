@@ -1480,7 +1480,7 @@ bool bpf_prog_array_is_empty(struct bpf_prog_array __rcu *progs)
 {
 	struct bpf_prog **prog = progs->progs;
 	for (; *prog; prog++)
-		if (prog != &dummy_bpf_prog.prog)
+		if (*prog != &dummy_bpf_prog.prog)
 				return false;
 
 	return true;

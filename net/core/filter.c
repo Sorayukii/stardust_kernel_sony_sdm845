@@ -3514,7 +3514,7 @@ static u32 xdp_convert_ctx_access(enum bpf_access_type type, int dst_reg,
 
 bool bpf_sock_common_is_valid_access(int off, int size,
 				     enum bpf_access_type type,
-				     struct bpf_insn_access_aux *info)
+				     enum bpf_reg_type *reg_type)
 {
 	switch (off) {
 	case bpf_ctx_range_till(struct bpf_sock, type, priority):

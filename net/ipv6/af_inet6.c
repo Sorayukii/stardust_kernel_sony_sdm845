@@ -294,7 +294,6 @@ int __inet6_bind(struct sock *sk, struct sockaddr *uaddr, int addr_len,
 int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
 {
 	struct sock *sk = sock->sk;
-	bool saved_ipv6only;
 	int err = 0;
 
 	/* If the socket has its own bind function then use it. */

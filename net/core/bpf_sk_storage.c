@@ -459,7 +459,6 @@ static struct bpf_sk_storage_data *sk_storage_update(struct sock *sk,
 		__selem_unlink_sk(sk_storage, SELEM(old_sdata), false);
 	}
 
-unlock:
 	raw_spin_unlock_bh(&sk_storage->lock);
 	return SDATA(selem);
 
