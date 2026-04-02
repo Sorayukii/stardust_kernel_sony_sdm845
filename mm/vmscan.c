@@ -68,14 +68,14 @@ struct scan_control {
 	/* This context's GFP mask */
 	gfp_t gfp_mask;
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 	/* The anonymous pages on the current node are below vm.anon_min_ratio */
 	unsigned int anon_below_min:1;
-
 	/* The clean file pages on the current node are below vm.clean_low_ratio */
 	unsigned int clean_below_low:1;
-
 	/* The clean file pages on the current node are below vm.clean_min_ratio */
 	unsigned int clean_below_min:1;
+#endif
 
 	/* Allocation order */
 	int order;
@@ -157,6 +157,7 @@ struct scan_control {
 #define prefetchw_prev_lru_page(_page, _base, _field) do { } while (0)
 #endif
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 unsigned int sysctl_workingset_protection __read_mostly = 1;
 unsigned int sysctl_anon_min_ratio  __read_mostly = CONFIG_ANON_MIN_RATIO;
 unsigned int sysctl_clean_low_ratio __read_mostly = CONFIG_CLEAN_LOW_RATIO;
@@ -165,6 +166,7 @@ static u64 sysctl_anon_min_ratio_kb  __read_mostly = 0;
 static u64 sysctl_clean_low_ratio_kb __read_mostly = 0;
 static u64 sysctl_clean_min_ratio_kb __read_mostly = 0;
 static u64 workingset_protection_prev_totalram __read_mostly = 0;
+#endif
 
 /*
  * From 0 .. 100.  Higher means more swappy.
@@ -2205,6 +2207,7 @@ static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
 	return shrink_inactive_list(nr_to_scan, lruvec, sc, lru);
 }
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 int vm_workingset_protection_update_handler(struct ctl_table *table, int write,
 		void __user *buffer, size_t *lenp, loff_t *ppos)
 {
@@ -2312,6 +2315,7 @@ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control 
 		sc->clean_below_min = 0;
 	}
 }
+#endif
 
 enum scan_balance {
 	SCAN_EQUAL,
@@ -2344,7 +2348,9 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
 	unsigned long ap, fp;
 	enum lru_list lru;
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 	prepare_workingset_protection(pgdat, sc);
+#endif
 
 	/* If we have no swap space, do not bother scanning anon pages. */
 	if (!sc->may_swap || mem_cgroup_get_nr_swap_pages(memcg) <= 0) {
@@ -2407,6 +2413,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
 		}
 	}
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 	/*
 	 * Force-scan anon if clean file pages is under vm.clean_low_kbytes
 	 * or vm.clean_min_kbytes.
@@ -2415,6 +2422,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
 		scan_balance = SCAN_ANON;
 		goto out;
 	}
+#endif
 
 	/*
 	 * If there is enough inactive page cache, i.e. if the size of the
@@ -2525,6 +2533,7 @@ out:
 			BUG();
 		}
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 		/*
 		 * Hard protection of the working set.
 		 * Don't reclaim anon/file pages when the amount is
@@ -2532,6 +2541,7 @@ out:
 		 */
 		if (file ? sc->clean_below_min : sc->anon_below_min)
 			scan = 0;
+#endif
 
 		*lru_pages += size;
 		nr[lru] = scan;
