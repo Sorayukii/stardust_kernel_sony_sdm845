@@ -85,7 +85,7 @@
 #include <linux/scatterlist.h>
 
 int sysctl_tcp_tw_reuse __read_mostly;
-int sysctl_tcp_low_latency __read_mostly;
+int sysctl_tcp_low_latency __read_mostly = 1;
 
 #ifdef CONFIG_TCP_MD5SIG
 static int tcp_v4_md5_hash_hdr(char *md5_hash, const struct tcp_md5sig_key *key,
