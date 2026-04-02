@@ -137,6 +137,7 @@ extern int mmap_rnd_compat_bits __read_mostly;
 
 extern int sysctl_max_map_count;
 
+#ifdef CONFIG_WORKINGSET_PROTECTION
 extern unsigned int sysctl_workingset_protection;
 extern unsigned int sysctl_anon_low_ratio;
 extern unsigned int sysctl_anon_min_ratio;
@@ -145,6 +146,7 @@ extern unsigned int sysctl_clean_min_ratio;
 int vm_workingset_protection_update_handler(
 	struct ctl_table *table, int write,
 	void __user *buffer, size_t *lenp, loff_t *ppos);
+#endif
 
 extern unsigned long sysctl_user_reserve_kbytes;
 extern unsigned long sysctl_admin_reserve_kbytes;
