@@ -1829,6 +1829,7 @@ static struct ctl_table vm_table[] = {
 		.extra2		= &one,
 	},
 #endif
+#ifdef CONFIG_WORKINGSET_PROTECTION
 	{
 		.procname	= "workingset_protection",
 		.data		= &sysctl_workingset_protection,
@@ -1876,6 +1877,7 @@ static struct ctl_table vm_table[] = {
 		.extra1		= &zero,
 		.extra2		= &one_hundred,
 	},
+#endif
 	{
 		.procname	= "user_reserve_kbytes",
 		.data		= &sysctl_user_reserve_kbytes,
