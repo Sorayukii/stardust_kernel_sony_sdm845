@@ -284,7 +284,7 @@
 
 int sysctl_tcp_min_tso_segs __read_mostly = 2;
 
-int sysctl_tcp_autocorking __read_mostly = 1;
+int sysctl_tcp_autocorking __read_mostly = 0;
 
 struct percpu_counter tcp_orphan_count;
 EXPORT_SYMBOL_GPL(tcp_orphan_count);
