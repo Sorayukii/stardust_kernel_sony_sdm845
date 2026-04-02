@@ -68,6 +68,7 @@
 
 #define BDEVFS_MAGIC            0x62646576
 #define DAXFS_MAGIC             0x64646178
+#define BINDERFS_SUPER_MAGIC	0x6c6f6f70
 #define BINFMTFS_MAGIC          0x42494e4d
 #define DEVPTS_SUPER_MAGIC	0x1cd1
 #define FUTEXFS_SUPER_MAGIC	0xBAD1DEA

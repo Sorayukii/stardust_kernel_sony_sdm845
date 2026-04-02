@@ -13,6 +13,7 @@
 #include <linux/types.h>
 #include <linux/uidgid.h>
 #include <uapi/linux/android/binderfs.h>
+#include <uapi/linux/eventpoll.h>
 #include "binder_alloc.h"
 
 struct binder_context {
@@ -447,6 +448,7 @@ struct binder_proc {
 	struct list_head waiting_threads;
 	int pid;
 	struct task_struct *tsk;
+	const struct cred *cred;
 	struct hlist_node deferred_work_node;
 	int deferred_work;
 	int outstanding_txns;
@@ -573,7 +575,6 @@ struct binder_transaction {
 	 * during thread teardown
 	 */
 	spinlock_t lock;
-	ANDROID_VENDOR_DATA(1);
 };
 
 /**
