@@ -936,3 +936,15 @@ config ONESEG_TUNER_SMTVJ19X
 	  1seg contents viewing.
 	  This module controls power switching and reset switching of
 	  SMT-VJ19x.
+
+config NTSYNC
+	tristate "NT synchronization primitive emulation"
+	default	y
+	help
+	  This module provides kernel support for emulation of Windows NT
+	  synchronization primitives. It is not a hardware driver.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called ntsync.
+
+	  If unsure, say N.
