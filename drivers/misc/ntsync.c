@@ -19,6 +19,7 @@
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 #include <linux/compat.h>
+#include <linux/lockdep.h>
 #include <uapi/linux/ntsync.h>
 
 #ifndef struct_size
@@ -35,6 +36,14 @@ static inline bool atomic_try_cmpxchg(atomic_t *v, int *old, int new)
 		*old = r;
 	return likely(r == o);
 }
+#endif
+
+#ifndef LOCK_STATE_NOT_HELD
+#define LOCK_STATE_NOT_HELD 0
+#endif
+
+#ifndef lockdep_assert
+#define lockdep_assert(cond) WARN_ON(!(cond))
 #endif
 
 static inline bool check_add_overflow_u32(__u32 a, __u32 b, __u32 *res)
