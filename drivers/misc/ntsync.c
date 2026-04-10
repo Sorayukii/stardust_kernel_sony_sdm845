@@ -18,6 +18,7 @@
 #include <linux/sched/signal.h>
 #include <linux/slab.h>
 #include <linux/spinlock.h>
+#include <linux/uaccess.h>
 #include <linux/compat.h>
 #include <linux/lockdep.h>
 #include <uapi/linux/ntsync.h>
@@ -44,6 +45,10 @@ static inline bool atomic_try_cmpxchg(atomic_t *v, int *old, int new)
 
 #ifndef lockdep_assert
 #define lockdep_assert(cond) WARN_ON(!(cond))
+#endif
+
+#ifndef lockdep_is_held
+#define lockdep_is_held(lock) 1 
 #endif
 
 static inline bool check_add_overflow_u32(__u32 a, __u32 b, __u32 *res)
@@ -779,6 +784,8 @@ static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
 		return -ENOIOCTLCMD;
 	}
 }
+
+static long ntsync_char_ioctl(struct file *file, unsigned int cmd, unsigned long parm);
 
 #ifdef CONFIG_COMPAT
 static long ntsync_obj_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
