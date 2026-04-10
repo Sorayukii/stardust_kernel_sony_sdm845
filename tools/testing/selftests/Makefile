@@ -1,6 +1,7 @@
 TARGETS = breakpoints
 TARGETS += capabilities
 TARGETS += cpu-hotplug
+TARGETS += drivers/ntsync
 TARGETS += efivarfs
 TARGETS += exec
 TARGETS += firmware
