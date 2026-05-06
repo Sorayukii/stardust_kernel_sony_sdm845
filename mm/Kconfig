@@ -675,36 +675,34 @@ config BALANCE_ANON_FILE_RECLAIM
 	  Swapping anonymous pages out to memory can be efficient enough to justify
 	  treating anonymous and file backed pages equally.
 
-config ANON_MIN_KBYTES
-	int "Default value for vm.anon_min_kbytes"
+config ANON_MIN_RATIO
+	int "Default value for vm.anon_min_ratio"
 	depends on SYSCTL
-	range 0 4294967295
-	default 0
+	range 0 100
 	help
-	  This option sets the default value for vm.anon_min_kbytes sysctl knob.
+	  This option sets the default value for vm.anon_min_ratio sysctl knob.
 
-	  The vm.anon_min_kbytes sysctl knob provides *hard* protection of
+	  The vm.anon_min_ratio sysctl knob provides *hard* protection of
 	  anonymous pages. The anonymous pages on the current node won't be
 	  reclaimed under any conditions when their amount is below
-	  vm.anon_min_kbytes. This knob may be used to prevent excessive swap
+	  vm.anon_min_ratio. This knob may be used to prevent excessive swap
 	  thrashing when anonymous memory is low (for example, when memory is
 	  going to be overfilled by compressed data of zram module).
 
 	  Setting this value too high (close to MemTotal) can result in
 	  inability to swap and can lead to early OOM under memory pressure.
 
-config CLEAN_LOW_KBYTES
-	int "Default value for vm.clean_low_kbytes"
+config CLEAN_LOW_RATIO
+	int "Default value for vm.clean_low_ratio"
 	depends on SYSCTL
-	range 0 4294967295
-	default 0
+	range 0 100
 	help
-	  This option sets the default value for vm.clean_low_kbytes sysctl knob.
+	  This option sets the default value for vm.clean_low_ratio sysctl knob.
 
-	  The vm.clean_low_kbytes sysctl knob provides *best-effort*
+	  The vm.clean_low_ratio sysctl knob provides *best-effort*
 	  protection of clean file pages. The file pages on the current node
 	  won't be reclaimed under memory pressure when the amount of clean file
-	  pages is below vm.clean_low_kbytes *unless* we threaten to OOM.
+	  pages is below vm.clean_low_ratio *unless* we threaten to OOM.
 	  Protection of clean file pages using this knob may be used when
 	  swapping is still possible to
 	    - prevent disk I/O thrashing under memory pressure;
@@ -715,18 +713,17 @@ config CLEAN_LOW_KBYTES
 	  pages into the swap space by attempting to hold the protected amount
 	  of clean file pages in memory.
 
-config CLEAN_MIN_KBYTES
-	int "Default value for vm.clean_min_kbytes"
+config CLEAN_MIN_RATIO
+	int "Default value for vm.clean_min_ratio"
 	depends on SYSCTL
-	range 0 4294967295
-	default 0
+	range 0 100
 	help
-	  This option sets the default value for vm.clean_min_kbytes sysctl knob.
+	  This option sets the default value for vm.clean_min_ratio sysctl knob.
 
-	  The vm.clean_min_kbytes sysctl knob provides *hard* protection of
+	  The vm.clean_min_ratio sysctl knob provides *hard* protection of
 	  clean file pages. The file pages on the current node won't be
 	  reclaimed under memory pressure when the amount of clean file pages is
-	  below vm.clean_min_kbytes. Hard protection of clean file pages using
+	  below vm.clean_min_ratio. Hard protection of clean file pages using
 	  this knob may be used to
 	    - prevent disk I/O thrashing under memory pressure even with no free
 	      swap space;
